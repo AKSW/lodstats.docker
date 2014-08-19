@@ -86,11 +86,13 @@ RUN cd /lodstats_www && python setup.py egg_info
 RUN cd /lodstats_www && paster make-config rdfstats production.ini
 RUN sed -i s/REPLACE_WITH_PASSWORD/lodstats/g /lodstats_www/production.ini
 
-#RUN apt-get install -y supervisor
-#RUN mkdir -p /var/log/supervisor
-#COPY supervisord.conf /etc/supervisor/conf.d/
+RUN apt-get install -y supervisor
+RUN mkdir -p /var/log/supervisor
+ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-ADD start.sh /start.sh
-CMD ["/bin/bash", "/start.sh"]
+CMD ["/usr/bin/supervisord"]
 
-EXPOSE 5000
+#ADD start.sh /start.sh
+#CMD ["/bin/bash", "/start.sh"]
+
+EXPOSE 22 5000
