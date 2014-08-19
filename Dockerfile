@@ -46,8 +46,8 @@ RUN apt-get install -y postgresql
 RUN apt-get install -y --fix-missing libpq-dev
 
 # get the LODStats DB dump
-RUN wget https://dl.dropboxusercontent.com/u/4882345/lodstats-dumps/lodstats-cleaned.dump.bz2 -O /lodstats-cleaned.dump.bz2
-RUN bunzip2 /lodstats-cleaned.dump.bz2
+RUN wget https://dl.dropboxusercontent.com/u/4882345/lodstats-dumps/lodstats-18082014.dump.bz2 -O /lodstats.dump.bz2
+RUN bunzip2 /lodstats.dump.bz2
 
 # fix the encoding in the postgres config
 RUN sed -i s/.*client_encoding\ =\ sql_ascii/client_encoding\ =\ utf8/g /etc/postgresql/9.3/main/postgresql.conf
@@ -65,7 +65,7 @@ USER postgres
 RUN /etc/init.d/postgresql start &&\
     psql --command "CREATE USER lodstats With PASSWORD 'lodstats';" &&\
     createdb -O lodstats lodstats &&\
-    psql lodstats < /lodstats-cleaned.dump
+    psql lodstats < /lodstats.dump
 
 ###############
 # Application #
@@ -97,6 +97,14 @@ RUN mkdir -p /var/log/supervisor
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 ADD rabbitmq.sh /rabbitmq.sh
 RUN chmod +x /rabbitmq.sh
+
+########
+# Cron #
+########
+
+#ADD crons.conf /crons.conf
+#RUN crontab /crons.conf
+#RUN cron
 
 ADD start.sh /start.sh
 CMD ["/bin/bash", "/start.sh"]
