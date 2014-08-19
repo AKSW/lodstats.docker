@@ -74,10 +74,6 @@ RUN /etc/init.d/postgresql start &&\
 # Switch back to root user
 USER root
 
-# lodstats 
-RUN git clone https://github.com/AKSW/LODStats /lodstats
-RUN cd /lodstats && python setup.py install
-
 # lodstats_www 
 RUN git clone https://github.com/AKSW/LODStats_WWW /lodstats_www
 RUN cd /lodstats_www && pip install --pre -r requirements.txt
@@ -86,13 +82,23 @@ RUN cd /lodstats_www && python setup.py egg_info
 RUN cd /lodstats_www && paster make-config rdfstats production.ini
 RUN sed -i s/REPLACE_WITH_PASSWORD/lodstats/g /lodstats_www/production.ini
 
+# lodstats 
+RUN git clone https://github.com/AKSW/LODStats /lodstats
+RUN cd /lodstats && python setup.py install
+
+
+# csv2rdf
+RUN git clone https://github.com/AKSW/CSV2RDF-WIKI /csv2rdf-wiki
+ENV PYTHONPATH /lodstats_www:/csv2rdf-wiki
+RUN cp /lodstats_www/production.ini /production.ini
+
 RUN apt-get install -y supervisor
 RUN mkdir -p /var/log/supervisor
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+ADD rabbitmq.sh /rabbitmq.sh
+RUN chmod +x /rabbitmq.sh
 
-CMD ["/usr/bin/supervisord"]
-
-#ADD start.sh /start.sh
-#CMD ["/bin/bash", "/start.sh"]
+ADD start.sh /start.sh
+CMD ["/bin/bash", "/start.sh"]
 
 EXPOSE 22 5000
