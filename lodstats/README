@@ -1,0 +1,7 @@
+#To build container
+sudo docker build -t lodstats .
+
+#To start container run
+sudo docker run -t -i -p 8080:5000 --link postgres-lodstats:postgres lodstats
+
+After that open localhost:8080 in your browser

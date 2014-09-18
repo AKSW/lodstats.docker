@@ -6,7 +6,7 @@ MAINTAINER Ivan Ermilov <iermilov@informatik.uni-leipzig.de>
 ENV DEBIAN_FRONTEND noninteractive
 
 # update ubuntu trusty
-RUN sed -i "1ideb mirror://mirrors.ubuntu.com/mirrors.txt trusty main restricted universe multiverse \ndeb mirror://mirrors.ubuntu.com/mirrors.txt trusty-updates main restricted universe multiverse \ndeb mirror://mirrors.ubuntu.com/mirrors.txt trusty-backports main restricted universe multiverse \ndeb mirror://mirrors.ubuntu.com/mirrors.txt trusty-security main restricted universe multiverse" /etc/apt/sources.list
+#RUN sed -i "1ideb mirror://mirrors.ubuntu.com/mirrors.txt trusty main restricted universe multiverse \ndeb mirror://mirrors.ubuntu.com/mirrors.txt trusty-updates main restricted universe multiverse \ndeb mirror://mirrors.ubuntu.com/mirrors.txt trusty-backports main restricted universe multiverse \ndeb mirror://mirrors.ubuntu.com/mirrors.txt trusty-security main restricted universe multiverse" /etc/apt/sources.list
 RUN apt-get update
 
 ################
@@ -37,44 +37,12 @@ RUN ln -s /apache-any23-core-1.0/bin/any23 /bin/
 # rabbitmq
 RUN apt-get install -y rabbitmq-server
 
-
-############
-# DATABASE #
-############
-# install postgres
-RUN apt-get install -y postgresql
-RUN apt-get install -y --fix-missing libpq-dev
-
-# get the LODStats DB dump
-RUN wget https://dl.dropboxusercontent.com/u/4882345/lodstats-dumps/lodstats-18082014.dump.bz2 -O /lodstats.dump.bz2
-RUN bunzip2 /lodstats.dump.bz2
-
-# fix the encoding in the postgres config
-RUN sed -i s/.*client_encoding\ =\ sql_ascii/client_encoding\ =\ utf8/g /etc/postgresql/9.3/main/postgresql.conf
-
-# Adjust PostgreSQL configuration so that remote connections to the
-# database are possible. 
-RUN echo "host all  all    0.0.0.0/0  md5" >> /etc/postgresql/9.3/main/pg_hba.conf
-
-# And add ``listen_addresses`` to ``/etc/postgresql/9.3/main/postgresql.conf``
-RUN echo "listen_addresses='*'" >> /etc/postgresql/9.3/main/postgresql.conf
-
-# Create users and populate the database
-USER postgres
-
-RUN /etc/init.d/postgresql start &&\
-    psql --command "CREATE USER lodstats With PASSWORD 'lodstats';" &&\
-    createdb -O lodstats lodstats &&\
-    psql lodstats < /lodstats.dump
-
 ###############
 # Application #
 ###############
 
-# Switch back to root user
-USER root
-
 # lodstats_www 
+RUN apt-get install -y libpq-dev
 RUN git clone https://github.com/AKSW/LODStats_WWW /lodstats_www
 RUN cd /lodstats_www && pip install --pre -r requirements.txt
 
@@ -85,7 +53,6 @@ RUN sed -i s/REPLACE_WITH_PASSWORD/lodstats/g /lodstats_www/production.ini
 # lodstats 
 RUN git clone https://github.com/AKSW/LODStats /lodstats
 RUN cd /lodstats && python setup.py install
-
 
 # csv2rdf
 RUN git clone https://github.com/AKSW/CSV2RDF-WIKI /csv2rdf-wiki

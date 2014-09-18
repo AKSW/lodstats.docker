@@ -1,0 +1,23 @@
+#List databases
+sudo docker run   --rm   --interactive   --tty   --link lodstats-postgres:postgres   postgres   bash -c 'exec psql -h "$POSTGRES_PORT_5432_TCP_ADDR" -p "$POSTGRES_PORT_5432_TCP_PORT" -U postgres -c "\l"'
+
+#Interactive mode
+sudo docker run   --rm   --interactive   --tty   --link lodstats-postgres:postgres   postgres bash -c 'exec psql -h "$POSTGRES_PORT_5432_TCP_ADDR" -p "$POSTGRES_PORT_5432_TCP_PORT" -U postgres'
+
+#Dump the database into your current dir on the host
+sudo docker run   --interactive   --link lodstats-postgres:postgres   --volume $PWD/:/tmp/   postgres   bash -c 'exec pg_dump -h "$POSTGRES_PORT_5432_TCP_ADDR" -p "$POSTGRES_PORT_5432_TCP_PORT" -U postgres -F tar -v -d demodatabase > /tmp/dump.tar'
+
+#Create database from the dump.tar in your current dir
+sudo docker run   --rm   --interactive   --link lodstats-postgres:postgres   --volume $PWD/:/tmp/   postgres   bash -c 'exec pg_restore -h "$POSTGRES_PORT_5432_TCP_ADDR" -p "$POSTGRES_PORT_5432_TCP_PORT" -U postgres -d demodatabase -F tar -v /tmp/dump.tar'
+
+#Create database from the dump.sql in your current dir
+sudo docker run   --rm   --interactive   --link lodstats-postgres:postgres   --volume $PWD/:/tmp/   postgres   bash -c 'exec psql -h "$POSTGRES_PORT_5432_TCP_ADDR" -p "$POSTGRES_PORT_5432_TCP_PORT" -U postgres -d demodatabase < /tmp/dump.sql'
+
+#Create ROLE
+echo "CREATE ROLE demorole WITH LOGIN ENCRYPTED PASSWORD 'password' CREATEDB;" | sudo docker run --rm --interactive --link lodstats-postgres:postgres postgres bash -c 'exec psql -h "$POSTGRES_PORT_5432_TCP_ADDR" -p "$POSTGRES_PORT_5432_TCP_PORT" -U postgres'
+
+#Create DATABASE
+echo "CREATE DATABASE demodatabase WITH OWNER demorole TEMPLATE template0 ENCODING 'UTF8';" | sudo docker run --rm --interactive --link lodstats-postgres:postgres postgres bash -c 'exec psql -h "$POSTGRES_PORT_5432_TCP_ADDR" -p "$POSTGRES_PORT_5432_TCP_PORT" -U postgres'
+
+#grant privileges on demodatabase to demorole
+echo "GRANT ALL PRIVILEGES ON DATABASE demodatabase TO demorole;" | sudo docker run --rm --interactive --link lodstats-postgres:postgres postgres bash -c 'exec psql -h "$POSTGRES_PORT_5432_TCP_ADDR" -p "$POSTGRES_PORT_5432_TCP_PORT" -U postgres'
