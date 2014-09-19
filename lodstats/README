@@ -2,9 +2,12 @@
 sudo docker build -t lodstats .
 
 #To start container run
-CID=$(sudo docker run -t -i -p 8080:5000 --link postgres-lodstats:postgres lodstats)
+CID=$(sudo docker run --name lodstats -t -i -p 8080:5000 --link lodstats-postgres:postgres --link rabbitmq:rabbitmq lodstats)
 
 After that open localhost:8080 in your browser
 
 #Run the command for processing all the files
-docker run --volumes-from $CID lodstats /process_all_datasets.sh
+sudo docker run --rm --interactive --tty --link lodstats-postgres:postgres --volumes-from=6cbe lodstats /bin/bash
+
+#Debugging
+sudo docker run --rm --interactive --name lodstats -t -i -p 8080:5000 --link lodstats-postgres:postgres --link rabbitmq:rabbitmq lodstats /bin/bash
