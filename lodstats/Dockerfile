@@ -34,9 +34,6 @@ RUN tar -zxf /any23.tar.gz
 RUN rm /any23.tar.gz
 RUN ln -s /apache-any23-core-1.0/bin/any23 /bin/
 
-# rabbitmq
-RUN apt-get install -y rabbitmq-server
-
 ###############
 # Application #
 ###############
@@ -62,8 +59,6 @@ RUN cp /lodstats_www/production.ini /production.ini
 RUN apt-get install -y supervisor
 RUN mkdir -p /var/log/supervisor
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-ADD rabbitmq.sh /rabbitmq.sh
-RUN chmod +x /rabbitmq.sh
 
 ########
 # Cron #
@@ -73,7 +68,18 @@ RUN chmod +x /rabbitmq.sh
 #RUN crontab /crons.conf
 #RUN cron
 
+###########
+# VOLUMES #
+###########
+
+VOLUME ["/lodstats"]
+VOLUME ["/lodstats_www"]
+VOLUME ["/csv2rdf-wiki"]
+
+ADD start_processing.sh /start_processing.sh
+RUN chmod +x /start_processing.sh
+
 ADD start.sh /start.sh
 CMD ["/bin/bash", "/start.sh"]
 
-EXPOSE 22 5000
+EXPOSE 5000
