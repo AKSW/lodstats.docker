@@ -6,7 +6,7 @@ MAINTAINER Ivan Ermilov <iermilov@informatik.uni-leipzig.de>
 ENV DEBIAN_FRONTEND noninteractive
 
 # update ubuntu trusty
-#RUN sed -i "1ideb mirror://mirrors.ubuntu.com/mirrors.txt trusty main restricted universe multiverse \ndeb mirror://mirrors.ubuntu.com/mirrors.txt trusty-updates main restricted universe multiverse \ndeb mirror://mirrors.ubuntu.com/mirrors.txt trusty-backports main restricted universe multiverse \ndeb mirror://mirrors.ubuntu.com/mirrors.txt trusty-security main restricted universe multiverse" /etc/apt/sources.list
+RUN sed -i "1ideb mirror://mirrors.ubuntu.com/mirrors.txt trusty main restricted universe multiverse \ndeb mirror://mirrors.ubuntu.com/mirrors.txt trusty-updates main restricted universe multiverse \ndeb mirror://mirrors.ubuntu.com/mirrors.txt trusty-backports main restricted universe multiverse \ndeb mirror://mirrors.ubuntu.com/mirrors.txt trusty-security main restricted universe multiverse" /etc/apt/sources.list
 RUN apt-get update
 
 ################
@@ -29,7 +29,7 @@ RUN echo oracle-java7-installer shared/accepted-oracle-license-v1-1 select true 
 RUN apt-get install -y oracle-java7-installer
 
 # any23
-RUN wget http://mirror.derwebwolf.net/apache/any23/1.0/apache-any23-core-1.0.tar.gz -O /any23.tar.gz
+RUN wget http://apache.mirrors.lucidnetworks.net/any23/1.1/apache-any23-core-1.1.tar.gz -O /any23.tar.gz
 RUN tar -zxf /any23.tar.gz
 RUN rm /any23.tar.gz
 RUN ln -s /apache-any23-core-1.0/bin/any23 /bin/
