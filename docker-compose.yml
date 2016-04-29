@@ -1,0 +1,25 @@
+version: '2'
+
+services:
+    web:
+        build: ./web
+        networks:
+            - lodstats
+        environment:
+            - LODSTATS_DB="db"
+            - RABBITMQ="rabbitmq"
+        ports:
+            - "8080:5000"
+
+    rabbitmq:
+        image: rabbitmq:3.6.1
+        networks:
+            - lodstats
+
+    db:
+        build: ./db
+        networks:
+            - lodstats
+
+networks:
+    lodstats:
