@@ -2,21 +2,26 @@ version: '2'
 
 services:
     web:
+        restart: always
         build: ./web
+        depends_on:
+            - "db"
         networks:
             - lodstats
         environment:
-            - LODSTATS_DB="db"
-            - RABBITMQ="rabbitmq"
+            - LODSTATS_DB=db
+            - RABBITMQ=rabbitmq
         ports:
             - "8080:5000"
 
     rabbitmq:
+        restart: always
         image: rabbitmq:3.6.1
         networks:
             - lodstats
 
     db:
+        restart: always
         build: ./db
         networks:
             - lodstats
