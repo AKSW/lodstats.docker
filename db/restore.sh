@@ -1,1 +1,0 @@
-sudo docker run   --rm   --interactive   --link lodstats-postgres:postgres   --volume $PWD/:/tmp/   postgres   bash -c 'exec pg_restore -h "$POSTGRES_PORT_5432_TCP_ADDR" -p "$POSTGRES_PORT_5432_TCP_PORT" -U postgres -d lodstats -F tar -v /tmp/lodstats.tar'
