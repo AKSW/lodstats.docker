@@ -82,4 +82,4 @@ RUN chmod +x /start_processing.sh
 ADD start.sh /start.sh
 CMD ["/bin/bash", "/start.sh"]
 
-EXPOSE 5000
+EXPOSE 80
