@@ -31,4 +31,4 @@ nginx:
         - web
         - virtuoso
     environment:
-        - VIRTUAL_HOST=lodstats.aksw.org
+        - VIRTUAL_HOST=lodstats.aksw.org,stats.lod2.eu
