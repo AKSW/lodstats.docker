@@ -1,34 +1,48 @@
-web:
-    restart: always
-    build: ./web
-    links:
-        - db
-        - rabbitmq
-    environment:
-        - LODSTATS_DB=db
-        - RABBITMQ=rabbitmq
+version: '2'
 
-rabbitmq:
-    restart: always
-    image: rabbitmq:3.6.1
-
-db:
-    restart: always
-    build: ./db
-
-virtuoso:
-    restart: always
-    build: ./virtuoso
-    environment:
-        - DBA_PASSWORD=dba
-        - SPARQL_UPDATE=false
-        - DEFAULT_GRAPH=http://lodstats.aksw.org/
-
-nginx:
-    build: ./nginx
-    restart: always
-    links:
-        - web
-        - virtuoso
-    environment:
-        - VIRTUAL_HOST=lodstats.aksw.org,stats.lod2.eu
+services:
+  web:
+      restart: always
+      build: ./web
+      links:
+          - db
+          - rabbitmq
+      environment:
+          - LODSTATS_DB=db
+          - RABBITMQ=rabbitmq
+      expose:
+          - 80
+      network_mode: "bridge"
+  
+  rabbitmq:
+      restart: always
+      image: rabbitmq:3.6.1
+      network_mode: "bridge"
+  
+  db:
+      restart: always
+      build: ./db
+      network_mode: "bridge"
+  
+  virtuoso:
+      restart: always
+      build: ./virtuoso
+      environment:
+          - DBA_PASSWORD=maipass
+          - SPARQL_UPDATE=false
+          - DEFAULT_GRAPH=http://lodstats.aksw.org/
+      expose:
+          - 8890
+      network_mode: "bridge"
+  
+  nginx:
+      build: ./nginx
+      restart: always
+      links:
+          - web
+          - virtuoso
+      environment:
+          - VIRTUAL_HOST=lodstats.aksw.org,stats.lod2.eu
+      expose:
+          - 80
+      network_mode: "bridge"
