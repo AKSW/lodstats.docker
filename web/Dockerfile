@@ -1,12 +1,12 @@
-FROM ubuntu:14.04
+FROM ubuntu
 
-MAINTAINER Ivan Ermilov <iermilov@informatik.uni-leipzig.de>
+LABEL "MAINTAINER"="Ivan Ermilov <iermilov@informatik.uni-leipzig.de>"
 
 # Let the conatiner know that there is no tty
 ENV DEBIAN_FRONTEND noninteractive
 
 # update ubuntu trusty
-RUN sed -i "1ideb mirror://mirrors.ubuntu.com/mirrors.txt trusty main restricted universe multiverse \ndeb mirror://mirrors.ubuntu.com/mirrors.txt trusty-updates main restricted universe multiverse \ndeb mirror://mirrors.ubuntu.com/mirrors.txt trusty-backports main restricted universe multiverse \ndeb mirror://mirrors.ubuntu.com/mirrors.txt trusty-security main restricted universe multiverse" /etc/apt/sources.list
+# RUN sed -i "1ideb mirror://mirrors.ubuntu.com/mirrors.txt trusty main restricted universe multiverse \ndeb mirror://mirrors.ubuntu.com/mirrors.txt trusty-updates main restricted universe multiverse \ndeb mirror://mirrors.ubuntu.com/mirrors.txt trusty-backports main restricted universe multiverse \ndeb mirror://mirrors.ubuntu.com/mirrors.txt trusty-security main restricted universe multiverse" /etc/apt/sources.list
 RUN apt-get update
 
 ################
@@ -77,15 +77,7 @@ RUN cp /lodstats_www/production.ini /production.ini
 RUN apt-get install -y supervisor
 # Supervisor is a client/server system that allows its users to monitor and control a number of processes on UNIX-like operating systems.
 RUN mkdir -p /var/log/supervisor
-ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-
-########
-# Cron #
-########
-
-#ADD crons.conf /crons.conf
-#RUN crontab /crons.conf
-#RUN cron
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 ###########
 # VOLUMES #
@@ -95,78 +87,13 @@ VOLUME ["/lodstats"]
 VOLUME ["/lodstats_www"]
 VOLUME ["/csv2rdf-wiki"]
 
-ADD start_processing.sh /start_processing.sh
+COPY start_processing.sh /start_processing.sh
 # Get all datasets ids from DB and push messages to process them to the queue.
 RUN chmod +x /start_processing.sh
 
-ADD start.sh /start.sh
-CMD ["/bin/bash", "/start.sh"]
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
+
+CMD ["/start.sh"]
 
 EXPOSE 80
-# production.ini
-#
-# rdfstats - Pylons configuration
-#
-# The %(here)s variable will be replaced with the parent directory of this file
-#
-# [DEFAULT]
-# debug = true
-# email_to = you@yourdomain.com
-# smtp_server = localhost
-# error_email_from = paste@localhost
-#
-# [server:main]
-# use = egg:Paste#http
-# host = 0.0.0.0
-# port = 5000
-#
-# [app:main]
-# use = egg:rdfstats
-# full_stack = true
-# static_files = true
-#
-# cache_dir = %(here)s/data
-# beaker.session.key = rdfstats
-# beaker.session.secret = UUSVRGf3dKvZG9WZqjOiYrhlw
-# app_instance_uuid = e8e95438-da39-40ae-8bfb-ca6c78692c30
-#
-# # If you'd like to fine-tune the individual locations of the cache data dirs
-# # for the Cache data, or the Session saves, un-comment the desired settings
-# # here:
-# #beaker.cache.data_dir = %(here)s/data/cache
-# #beaker.session.data_dir = %(here)s/data/sessions
-#
-# # SQLAlchemy database URL
-# sqlalchemy.url = postgres://lodstats:lodstats@REPLACE_WITH_THE_HOST/lodstats
-#
-# # WARNING: *THE LINE BELOW MUST BE UNCOMMENTED ON A PRODUCTION ENVIRONMENT*
-# # Debug mode will enable the interactive debugging tool, allowing ANYONE to
-# # execute malicious code after an exception is raised.
-# set debug = false
-#
-# # CKAN base and api key
-# ckan.base = http://thedatahub.org/
-# ckan.api_key = REPLACE_ME_WITH_YOUR_API_KEY
-#
-# # Logging configuration
-# [loggers]
-# keys = root
-#
-# [handlers]
-# keys = console
-#
-# [formatters]
-# keys = generic
-#
-# [logger_root]
-# level = INFO
-# handlers = console
-#
-# [handler_console]
-# class = StreamHandler
-# args = (sys.stderr,)
-# level = NOTSET
-# formatter = generic
-#
-# [formatter_generic]
-# format = %(asctime)s %(levelname)-5.5s [%(name)s] [%(threadName)s] %(message)s

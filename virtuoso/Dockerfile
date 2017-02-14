@@ -1,11 +1,11 @@
 FROM tenforce/virtuoso
 
-MAINTAINER "Ivan Ermilov <mailto:ivan.s.ermilov@gmail.com>"
+LABEL "maintainer"="Ivan Ermilov <mailto:ivan.s.ermilov@gmail.com>" "maintainer"="georges.alkhouri@gmail.com"
 
 RUN apt-get update
 RUN apt-get install -y wget
 
-ADD entrypoint.sh /entrypoint.sh
-RUN chmod a+x /entrypoint.sh
+COPY run.sh /run.sh
+RUN chmod +x /run.sh
 
-ENTRYPOINT ["/entrypoint.sh"]
+CMD ["/run.sh"]

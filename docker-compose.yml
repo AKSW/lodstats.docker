@@ -1,8 +1,7 @@
-version: '2'
+version: '3'
 
 services:
   web:
-      restart: always
       build: ./web
       links:
           - db
@@ -12,37 +11,27 @@ services:
           - RABBITMQ=rabbitmq
       expose:
           - 80
-      network_mode: "bridge"
-
   rabbitmq:
-      restart: always
       image: rabbitmq:3.6.1
-      network_mode: "bridge"
 
   db:
-      restart: always
       build: ./db
-      network_mode: "bridge"
 
   virtuoso:
-      restart: always
       build: ./virtuoso
       environment:
-          - DBA_PASSWORD=maipass
+          - DBA_PASSWORD=mypass
           - SPARQL_UPDATE=false
           - DEFAULT_GRAPH=http://lodstats.aksw.org/
       ports:
           - "8890:8890"
-      network_mode: "bridge"
 
   nginx:
       build: ./nginx
-      restart: always
       links:
           - web
           - virtuoso
       environment:
           - VIRTUAL_HOST=lodstats.aksw.org,stats.lod2.eu
       ports:
-          - "3000:80"
-      network_mode: "bridge"
+          - "80:80"
