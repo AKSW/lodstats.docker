@@ -42,7 +42,7 @@ RUN ln -s /apache-any23-core-1.0/bin/any23 /bin/
 
 # lodstats_www
 RUN apt-get install -y libpq-dev
-RUN git clone https://github.com/AKSW/LODStats_WWW /lodstats_www
+RUN git clone https://github.com/k00ni/LODStats_WWW.git /lodstats_www
 RUN cd /lodstats_www && pip install --pre -r requirements.txt
 # pastescript
 # sqlalchemy
