@@ -32,6 +32,22 @@ The nodes are marking the different Docker container.
       d -> e [label="Exposing LODStats SPARQL Endpoint"]
   })
 
+### db
+Exposes Postgresql data base which contains statistical information for LODStats.
+
+### rabbitmq
+Message queue which processes the aggregated dumps for LODStats.
+
+### web
+Contains the [LODStats web application](https://github.com/k00ni/LODStats_WWW) which depends on **db** and **rabbitmq**.
+
+### virtuoso
+Exposes a sparql endpoint, which contains a RDF representation of **db**, to the **nginx** container.
+
+### nginx
+Brings the web application and the virtuose endpoint together and makes them accessible through the host system.
+
+
 Changes to original repository
 ------------------------------
 
