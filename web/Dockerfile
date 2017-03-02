@@ -31,7 +31,7 @@ RUN apt-get install -y oracle-java7-installer
 # any23
 # Anything To Triples (Any23) is a library, a web service and a command line tool that extracts structured data in RDF format from a variety
 # of Web documents
-RUN wget http://apache.mirrors.lucidnetworks.net/any23/1.1/apache-any23-core-1.1.tar.gz -O /any23.tar.gz
+RUN wget https://archive.apache.org/dist/any23/1.1/apache-any23-core-1.1.tar.gz -O /any23.tar.gz
 RUN tar -zxf /any23.tar.gz
 RUN rm /any23.tar.gz
 RUN ln -s /apache-any23-core-1.0/bin/any23 /bin/
