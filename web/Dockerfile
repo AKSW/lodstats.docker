@@ -94,6 +94,10 @@ RUN chmod +x /start_processing.sh
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
 
+COPY crontab.txt /var/crontab.txt
+RUN crontab /var/crontab.txt
+RUN chmod 600 /etc/crontab
+
 CMD ["/start.sh"]
 
 EXPOSE 80

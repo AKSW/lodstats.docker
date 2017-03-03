@@ -2,6 +2,8 @@ FROM postgres:9.5.2
 
 MAINTAINER "Ivan Ermilov <mailto:ivan.s.ermilov@gmail.com>"
 
+ENV POSTGRES_USER postgres
+
 RUN apt-get update
 RUN apt-get install -y wget
 

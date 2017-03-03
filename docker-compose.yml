@@ -16,6 +16,8 @@ services:
 
   db:
       build: ./db
+      environment:
+        - POSTGRES_USER=postgres
 
   virtuoso:
       build: ./virtuoso
