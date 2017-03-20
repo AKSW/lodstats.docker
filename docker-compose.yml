@@ -10,7 +10,10 @@ services:
           - LODSTATS_DB=db
           - RABBITMQ=rabbitmq
       expose:
-          - 80
+          - 8080
+      volumes:
+          # Set your own path for local development
+          - /home/k00ni/Documents/LODStats_WWW/rdfstats:/lodstats_www/rdfstats
   rabbitmq:
       image: rabbitmq:3.6.1
 
@@ -37,4 +40,4 @@ services:
       environment:
           - VIRTUAL_HOST=lodstats.aksw.org,stats.lod2.eu
       ports:
-          - "80:80"
+          - "8080:80"
