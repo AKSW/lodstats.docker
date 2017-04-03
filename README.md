@@ -19,18 +19,7 @@ Docker-Compose Structure
 
 The nodes are marking the different Docker container.
 
-![Alt text](https://g.gravizo.com/svg?
-  digraph G {
-      a [label="web"]
-      b [label="rabbitmq"]
-      c [label="db"]
-      d [label="virtuoso"]
-      e [label="nginx"]
-      c -> a [label="Exposing PostgreSQL DB"]
-      b -> a [label="Message Queue"]
-      a -> e [label="LODStats Web Application"]
-      d -> e [label="Exposing LODStats SPARQL Endpoint"]
-  })
+![Alt text](https://g.gravizo.com/svg?%20digraph%20G%20%7B%0A%20%20%20%20%20%20a%20%5Blabel%3D%22web%22%5D%0A%20%20%20%20%20%20b%20%5Blabel%3D%22rabbitmq%22%5D%0A%20%20%20%20%20%20c%20%5Blabel%3D%22db%22%5D%0A%20%20%20%20%20%20d%20%5Blabel%3D%22virtuoso%22%5D%0A%20%20%20%20%20%20e%20%5Blabel%3D%22nginx%22%5D%0A%20%20%20%20%20%20c%20-%3E%20a%20%5Blabel%3D%22Exposing%20PostgreSQL%20DB%22%5D%0A%20%20%20%20%20%20b%20-%3E%20a%20%5Blabel%3D%22Message%20Queue%22%5D%0A%20%20%20%20%20%20a%20-%3E%20e%20%5Blabel%3D%22LODStats%20Web%20Application%22%5D%0A%20%20%20%20%20%20d%20-%3E%20e%20%5Blabel%3D%22Exposing%20LODStats%20SPARQL%20Endpoint%22%5D%0A%20%20%7D)
 
 ### db
 Exposes Postgresql data base which contains statistical information for LODStats.
