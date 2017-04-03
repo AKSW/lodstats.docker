@@ -21,6 +21,8 @@ services:
       build: ./db
       environment:
         - POSTGRES_USER=postgres
+      volumes:
+        # - /local/path/for/postgres/data:/var/lib/postgresql/data
 
   virtuoso:
       build: ./virtuoso
