@@ -1,0 +1,4 @@
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+PYTHONPATH=/lodstats_www:/csv2rdf-wiki
+0 0 * * 0 /start_processing.sh >> /var/log/cron.log 2>&1
