@@ -1,7 +1,8 @@
 #!/bin/bash
 set -e
 
-wget https://dl.dropboxusercontent.com/u/4882345/lodstats-dumps/30-04-2016.dump -O /lodstats.dump
+wget https://www.dropbox.com/s/xszbuq2fnj9z9x3/lodstats_dump_13-09-2017_17_20_05.sql.gz -O /lodstats.dump.gz
+gunzip /lodstats.dump.gz
 
 psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" <<-EOSQL
     CREATE ROLE lodstats WITH LOGIN ENCRYPTED PASSWORD 'lodstats' CREATEDB;
