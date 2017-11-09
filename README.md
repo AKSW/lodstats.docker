@@ -10,6 +10,13 @@ Download the lodstats RDF dump (142MB download size, 3GB uncompressed) and DB du
 make download
 ```
 
+Deploy:
+```
+docker-compose up -d
+```
+
+Note: nginx might go down if it starts too soon to find the hosts. To fix, just restart it.
+
 Docker Image HDD footprint
 ================
 
